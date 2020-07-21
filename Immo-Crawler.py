@@ -11,7 +11,7 @@ from datetime import datetime
 import pandas as pd
 import json
 
-for seite in range(1,100):
+for seite in range(1,500):
     
     print("Seite " + str(seite) + " wird jetzt von dem Crawler durchsucht.")
 
@@ -21,7 +21,8 @@ for seite in range(1,100):
     try:
         
         soup = bs.BeautifulSoup(urllib.request.urlopen("https://www.immobilienscout24.de/Suche/S-2/P-"+str(seite)+"/Haus-Kauf").read(),'lxml')
-        print("Crawler ist jetzt auf dieser Webseite:\n        "+"https://www.immobilienscout24.de/Suche/S-2/P-"+str(seite)+"/Haus-Kauf")
+        print("Crawler ist jetzt auf dieser Webseite:\n        "+"https://www.immobilienscout24.de/Suche/S-2/P-"+str(seite)+"/Haus-Kauf ")
+        print(datetime.now())
         for paragraph in soup.find_all("a"):
 
             if r"/expose/" in str(paragraph.get("href")):
@@ -60,7 +61,7 @@ for seite in range(1,100):
                 l = list(filter(lambda x: x != item, l))
                 print("ID " + str(item) + " entfernt.")
         print("Exportiert CSV")
-        df.to_csv("./Rohdaten/"+str(datetime.now())[:19].replace(":","").replace(".","")+".csv",sep=";",decimal=",",encoding = "utf-8",index_label="timestamp")     
+        df.to_csv("./Rohdaten/"+str(datetime.now())[:19].replace(":","").replace(".","")+".csv",sep=";",decimal=",",encoding = "iso-8859-15",index_label="timestamp")     
 
         print("Loop " + str(seite) + " endet.\n")
         
@@ -80,21 +81,17 @@ count=1
 for i in os.listdir("./Rohdaten/"):
     print(str(count)+". Datei: "+str(i))
     count+=1
-    df = df.append(pd.read_csv("./Rohdaten/" + str(i),sep=";",encoding="utf-8",decimal=","))
+    df = df.append(pd.read_csv("./Rohdaten/" + str(i),sep=";",encoding="iso-8859-15",decimal=","))
     
 
     df.shape
-    data["Makler"].replace(regex=True,inplace=True,to_replace=r'<a class="font-regular is24-external" data-is24-realtor-home-page-link-reporting="" href="',value=r'')
-    data["Makler"].replace(regex=True,inplace=True,to_replace=r'" id="is24-expose-realtor-box-homepage">',value=r'||')
-    data["Makler"].replace(regex=True,inplace=True,to_replace=r'</a>',value=r'')
-    df = df.drop_duplicates(subset="URL")
 
     df.shape
 
-    df.to_csv("./Mitte/Komplett.csv",sep=";",encoding="utf-8",decimal=",")
+    df.to_csv("./Mitte/Komplett.csv",sep=";",encoding="iso-8859-15",decimal=",")
     
     
-    print("Nun zum Final Step!")
+    print("die Nächste Datei!:")
     
     
     
@@ -109,7 +106,7 @@ for i in os.listdir("./Mitte/"):
     print("Vorgang läuft")
     #print(str(count)+". Datei: "+str(i) "")
     count+=1
-    df = df.append(pd.read_csv("./Mitte/" + str(i),sep=";",encoding="utf-8",decimal=","))
+    df = df.append(pd.read_csv("./Mitte/" + str(i),sep=";",encoding="iso-8859-15",decimal=","))
     df.shape
     
     df = df.drop('obj_regio1', axis=1)
@@ -206,11 +203,10 @@ for i in os.listdir("./Mitte/"):
     df.columns.values[13] = 'Letzte Renovierung'  
  
     
-    df = df.drop_duplicates(subset="URL")
 
     df.shape
-    df.to_csv("./Final.csv",sep=";",encoding="utf-8",decimal=",")
-    df.to_csv("./Final/Final.csv",sep=";",encoding="utf-8",decimal=",")
+    df.to_csv("./Final.csv",sep=";",encoding="iso-8859-15",decimal=",")
+    df.to_csv("./Final/Final.csv",sep=";",encoding="iso-8859-15",decimal=",")
     
     print("Nun ist es alles vorbei!!!\nBereit zur Untersuchung!")
     
