@@ -1,0 +1,7 @@
+bs4 
+urllib.request
+time
+datetime 
+pandas
+json
+os
